@@ -31,11 +31,15 @@ public class Calculator {
 
         checkNumbersSize(firstNumber, secondNumber);
 
-        firstNumber = checkForMinusFirstNumber(condition, firstNumber);
-        secondNumber = checkForMinusSecondNumber(condition, secondNumber);
+        if (!isRomanNumber) {
+            firstNumber = getMinusFirstNumber(condition, firstNumber);
+            secondNumber = getMinusSecondNumber(condition, secondNumber);
+        } else {
+            checkForMinusFirstRomanNumber(condition);
+            checkForMinusSecondRomanNumber(condition);
+        }
 
         int arabicResult = getResult(operation, firstNumber, secondNumber);
-
 
         if (isRomanNumber) {
             checkRomansResultForMinusNumber(arabicResult);
@@ -58,22 +62,15 @@ public class Calculator {
     }
 
     private static boolean checkForRomanNumber(String firstNumber, String secondNumber) throws Exception {
-        if (isNumeric(firstNumber) && !isNumeric(secondNumber)) {
-            throw new Exception("I can work only with roman number or arabic number");
-        } else if (!isNumeric(firstNumber) && isNumeric(secondNumber)) {
-            throw new Exception("I can work only with roman number or arabic number");
+        if (isNumeric(firstNumber) && !isNumeric(secondNumber)
+                || !isNumeric(firstNumber) && isNumeric(secondNumber)) {
+            throw new Exception("Wrong input");
         }
         return !isNumeric(firstNumber) && !isNumeric(secondNumber);
     }
 
     private static int parseInt(String number) {
-        int result;
-        if (isNumeric(number)) {
-            result = Integer.parseInt(number);
-        } else {
-            result = Arabic.romanToArabic(number);
-        }
-        return result;
+        return isNumeric(number) ? Integer.parseInt(number) : Arabic.romanToArabic(number);
     }
 
     private static void checkNumbersSize(int firstNumber, int secondNumber) throws Exception {
@@ -133,23 +130,46 @@ public class Calculator {
         return operation;
     }
 
-    private static int checkForMinusFirstNumber(String condition, int firstNumber) {
-        if (condition.charAt(0) == '-') {
+    private static int getMinusFirstNumber(String condition, int firstNumber) {
+        if (checkForMinusFirstNumber(condition)) {
             firstNumber *= -1;
         }
         return firstNumber;
     }
 
-    private static int checkForMinusSecondNumber(String condition, int secondNumber) {
+    private static boolean checkForMinusFirstNumber(String condition) {
+        return condition.charAt(0) == '-';
+    }
+
+    private static int getMinusSecondNumber(String condition, int secondNumber) {
+        if (checkForMinusSecondNumber(condition)) {
+            secondNumber *= -1;
+        }
+        return secondNumber;
+    }
+
+    private static boolean checkForMinusSecondNumber(String condition) {
         condition = condition.replaceAll(" ", "");
         for (int i = 1; i < condition.length(); i++) {
             if (condition.charAt(i) == '+' || condition.charAt(i) == '-'
                     || condition.charAt(i) == '*' || condition.charAt(i) == '/') {
                 if (condition.charAt(i + 1) == '-') {
-                    secondNumber *= -1;
+                    return true;
                 }
             }
         }
-        return secondNumber;
+        return false;
+    }
+
+    private static void checkForMinusFirstRomanNumber(String condition) throws Exception {
+        if (checkForMinusFirstNumber(condition)) {
+            throw new Exception("Roman number should be positive");
+        }
+    }
+
+    private static void checkForMinusSecondRomanNumber(String condition) throws Exception {
+        if (checkForMinusSecondNumber(condition)) {
+            throw new Exception("Roman number should be positive");
+        }
     }
 }

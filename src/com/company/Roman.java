@@ -4,8 +4,8 @@ import java.util.List;
 
 public class Roman {
     public static String arabicToRoman(int number) {
-        if ((number <= 0) || (number > 11)) {
-            throw new IllegalArgumentException(number + " is not in range (0,10]");
+        if ((number <= 0) || (number >= 101)) {
+            throw new IllegalArgumentException(number + " is not in range (0,101]");
         }
 
         List<RomanNumeral> romanNumerals = RomanNumeral.getReverseSortedValues();
