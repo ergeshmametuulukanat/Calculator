@@ -15,6 +15,10 @@ public class Calculator {
     public static void main(String[] args) throws Exception {
         Scanner scanner = new Scanner(System.in);
         String condition = scanner.nextLine();
+        getFinalResult(condition);
+
+    }
+    private static void getFinalResult(String condition) throws Exception {
         int firstNumber;
         int secondNumber;
         char operation = getOperation(condition);
